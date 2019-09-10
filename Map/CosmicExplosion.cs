@@ -12,6 +12,8 @@ namespace Map
         {
             Timeout = 100;
 
+            Name = "e-" + unit.Name;
+
             Type = CosmicUnitKind.Explosion;
         }
 

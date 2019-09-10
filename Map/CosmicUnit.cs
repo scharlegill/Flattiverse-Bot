@@ -21,7 +21,7 @@ namespace Map
         public CosmicUnit(Unit unit)
         {
             Radius = unit.Radius;
-            Name = "e-" + unit.Name;
+            Name = unit.Name;
             Position = unit.Position;
             Team = unit.Team;
             MoveVector = unit.Movement;
