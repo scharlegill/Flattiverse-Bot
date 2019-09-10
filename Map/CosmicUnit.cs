@@ -60,7 +60,7 @@ namespace Map
                 case UnitKind.Planet:
                     return new CosmicPlanet(unit);
                 case UnitKind.Explosion:
-                    return new CosmicUnit(unit);
+                    return new CosmicExplosion(unit);
                 case UnitKind.Meteoroid:
                     return new CosmicMeteorid(unit);
                 case UnitKind.MissionTarget:
