@@ -37,8 +37,20 @@ namespace Map
                     gravitalUnits.Add(cosmicUnit);
 
                 namedUnits.Add(scannedUnit.Name, cosmicUnit);
+
+                if (cosmicUnit is CosmicShot || cosmicUnit is CosmicExplosion)
+                    shotUnits.Add(cosmicUnit);
+
+                if (cosmicUnit is CosmicShip)
+                    shipUnits.Add(cosmicUnit);
             }
 
+        }
+
+        public bool TryGetValue(string name, out CosmicUnit unit)
+        {
+            lock (sync)
+                return namedUnits.TryGetValue(name, out unit);
         }
 
         public bool IsMergable
@@ -52,11 +64,50 @@ namespace Map
 
         public bool Merge(CosmicMap map)
         {
- 
+            CosmicUnit dst = null;
+            Vector diff = null;
+
             lock (sync)
                 lock (map.sync)
                 {
-             
+                    foreach (CosmicUnit unit in map.stillUnits)
+                        if (namedUnits.TryGetValue(unit.Name, out dst))
+                        {
+                            diff = unit.Position - dst.Position;
+                            break;
+                        }
+
+                    if (diff == null)
+                        return false;
+
+                    foreach (KeyValuePair<string, CosmicUnit> kvp in map.namedUnits)
+                        if (namedUnits.TryGetValue(kvp.Key, out dst))
+                        {
+                            if (!kvp.Value.Still)
+                            {
+                                kvp.Value.Position -= diff;
+
+                                dst.Update(kvp.Value);
+                            }
+                        }
+                        else
+                        {
+                            kvp.Value.Position -= diff;
+
+                            namedUnits.Add(kvp.Value.Name, kvp.Value);
+
+                            if (kvp.Value.Still)
+                                stillUnits.Add(kvp.Value);
+                            else
+                                mobileUnits.Add(kvp.Value);
+
+                            if (kvp.Value is CosmicShot || kvp.Value is CosmicExplosion)
+                                shotUnits.Add(kvp.Value);
+
+                            if (kvp.Value is CosmicShip)
+                                shipUnits.Add(kvp.Value);
+
+                        }
                 }
 
             return true;
@@ -70,6 +121,11 @@ namespace Map
         public List<CosmicUnit> Query(float left, float top, float right, float bottom)
         {
             List<CosmicUnit> units = new List<CosmicUnit>();
+
+            lock (sync)
+                foreach (CosmicUnit unit in namedUnits.Values)
+                    if (unit.Position.X + unit.Radius > left && unit.Position.Y + unit.Radius > top && unit.Position.X - unit.Radius < bottom && unit.Position.Y - unit.Radius < right)
+                        units.Add(unit);
 
             return units;
         }
