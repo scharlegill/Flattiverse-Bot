@@ -25,6 +25,27 @@ namespace Map
 
         }
 
+        public bool IsMergable
+        {
+            get
+            {
+                lock (sync)
+                    return stillUnits.Count > 0;
+            }
+        }
+
+        public bool Merge(CosmicMap map)
+        {
+ 
+            lock (sync)
+                lock (map.sync)
+                {
+                 
+                }
+
+            return true;
+        }
+
         public CosmicMap MergeAll(CosmicMap map)
         {
             return map;
@@ -35,6 +56,19 @@ namespace Map
             List<CosmicUnit> units = new List<CosmicUnit>();
 
             return units;
+        }
+
+        public List<CosmicUnit> GetTargets(string name, Team team)
+        {
+            List<CosmicUnit> targets = new List<CosmicUnit>();
+
+            lock (sync)
+            {
+
+
+            }
+
+            return targets;
         }
     }
 }
