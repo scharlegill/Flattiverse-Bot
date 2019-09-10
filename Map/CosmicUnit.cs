@@ -33,6 +33,16 @@ namespace Map
             Timeout = 10;
         }
 
+        public CosmicUnit(Ship ownerShip)
+        {
+            Radius = ownerShip.Radius;
+            Name = ownerShip.Name;
+            Position = new Vector(0, 0);
+            Type = CosmicUnitKind.Ship;
+            MoveVector = new Vector();
+            Still = false;
+        }
+
         public static CosmicUnit FromFVUnit(Unit unit)
         {
             switch (unit.Kind)
@@ -65,14 +75,15 @@ namespace Map
 
         public virtual void UpdateTimeout()
         {
-
-
+            Timeout = 10;
         }
 
         public virtual void Update(CosmicUnit unit)
         {
+            Position = unit.Position;
+            MoveVector = unit.MoveVector;
 
-
+            Radius = unit.Radius;
         }
     }
 }

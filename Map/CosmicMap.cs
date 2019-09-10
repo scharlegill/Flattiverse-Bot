@@ -18,9 +18,11 @@ namespace Map
         private List<CosmicUnit> mobileUnits = new List<CosmicUnit>();
         private List<CosmicUnit> gravitalUnits = new List<CosmicUnit>();
 
+        public List<Vector> NewDestination = new List<Vector>();
+
         private object sync = new object();
 
-        public CosmicMap(List<Unit> scannedUnits)
+        public CosmicMap(List<Unit> scannedUnits, Ship scanningShip)
         {
             namedUnits = new Dictionary<string, CosmicUnit>();
 
@@ -45,6 +47,35 @@ namespace Map
                     shipUnits.Add(cosmicUnit);
             }
 
+            CosmicOwnership ownShip = new CosmicOwnership(scanningShip);
+
+            namedUnits.Add(ownShip.Name, ownShip);
+
+            if (ownShip.Still)
+                stillUnits.Add(ownShip);
+            else
+                mobileUnits.Add(ownShip);
+
+            shipUnits.Add(ownShip);
+
+        }
+
+        public CosmicUnit this[string name]
+        {
+            get
+            {
+                lock (sync)
+                    return namedUnits[name];
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                lock (sync)
+                    return namedUnits.Count;
+            }
         }
 
         public bool TryGetValue(string name, out CosmicUnit unit)

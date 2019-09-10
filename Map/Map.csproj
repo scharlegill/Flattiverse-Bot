@@ -53,7 +53,7 @@
     <Compile Include="CosmicPlanet.cs" />
     <Compile Include="CosmicShip.cs" />
     <Compile Include="CosmicShot.cs" />
-    <Compile Include="CosmicStarShip.cs" />
+    <Compile Include="CosmicOwnership.cs" />
     <Compile Include="CosmicSun.cs" />
     <Compile Include="CosmicUnit.cs" />
     <Compile Include="CosmicUnitKind.cs" />
