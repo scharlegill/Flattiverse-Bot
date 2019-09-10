@@ -9,11 +9,12 @@ namespace Map
     public class CosmicOwnership : CosmicUnit
     {
         private readonly Controllable controllable;
+        private Vector movement;
 
         public CosmicOwnership(Ship scanningShip) : base(scanningShip)
         {
             Type = CosmicUnitKind.StarShip;
-/*            Team = scanningShip.*/;
+           Team = scanningShip.Universe.UniverseGroup.Players["Scharle"].Team;
 
             Timeout = 30;
 
@@ -75,6 +76,8 @@ namespace Map
                 return controllable.WeaponProductionStatus;
             }
         }
+
+        public Vector Movement { get => movement; set => movement = value; }
 
         public override void UpdateTimeout()
         {

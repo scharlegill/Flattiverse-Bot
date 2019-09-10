@@ -8,7 +8,10 @@ namespace Map
 {
     public class CosmicMap
     {
+        public Vector ScanningShipMovement;
+
         private Vector shipmentMovement = new Vector();
+        private Vector movement = null;
 
         private Dictionary<string, CosmicUnit> namedUnits;
         private List<CosmicShip> ownShipUnits = new List<CosmicShip>();
@@ -27,15 +30,34 @@ namespace Map
             namedUnits = new Dictionary<string, CosmicUnit>();
 
             foreach (Unit scannedUnit in scannedUnits)
+                if (scannedUnit.Mobility != Mobility.Still)
+                {
+                    movement = -scannedUnit.Movement;
+
+                    break;
+                }
+
+            if (movement == null)
+                movement = new Vector();
+
+            foreach (Unit scannedUnit in scannedUnits)
             {
                 CosmicUnit cosmicUnit = CosmicUnit.FromFVUnit(scannedUnit);
+
+                if (cosmicUnit.Still)
+                    cosmicUnit.MoveVector = new Vector();
+                else
+                    cosmicUnit.MoveVector += movement;
+
+                if (cosmicUnit.Still)
+                    ScanningShipMovement = -scannedUnit.Movement;
 
                 if (cosmicUnit.Still)
                     stillUnits.Add(cosmicUnit);
                 else
                     mobileUnits.Add(cosmicUnit);
 
-                if (cosmicUnit.Gravity == 0)
+                if (cosmicUnit.Gravity != 0)
                     gravitalUnits.Add(cosmicUnit);
 
                 namedUnits.Add(scannedUnit.Name, cosmicUnit);
@@ -48,6 +70,8 @@ namespace Map
             }
 
             CosmicOwnership ownShip = new CosmicOwnership(scanningShip);
+
+            ownShip.MoveVector = ScanningShipMovement;
 
             namedUnits.Add(ownShip.Name, ownShip);
 
@@ -93,6 +117,31 @@ namespace Map
             }
         }
 
+        public List<CosmicUnit> GravitalUnits { get => gravitalUnits; set => gravitalUnits = value; }
+
+        public CosmicUnit ScanReference(Vector position)
+        {
+            float distance = float.MaxValue;
+
+            Vector cVector;
+            CosmicUnit cUnit = null;
+
+            lock (sync)
+                foreach (CosmicUnit unit in stillUnits)
+                {
+                    cVector = unit.Position - position;
+
+                    if (cVector < distance)
+                    {
+                        cUnit = unit;
+
+                        distance = cVector.Length;
+                    }
+                }
+
+            return cUnit;
+        }
+
         public bool Merge(CosmicMap map)
         {
             CosmicUnit dst = null;
@@ -101,6 +150,8 @@ namespace Map
             lock (sync)
                 lock (map.sync)
                 {
+                    ScanningShipMovement = map.ScanningShipMovement;
+
                     foreach (CosmicUnit unit in map.stillUnits)
                         if (namedUnits.TryGetValue(unit.Name, out dst))
                         {
@@ -144,11 +195,6 @@ namespace Map
             return true;
         }
 
-        public CosmicMap MergeAll(CosmicMap map)
-        {
-            return map;
-        }
-
         public List<CosmicUnit> Query(float left, float top, float right, float bottom)
         {
             List<CosmicUnit> units = new List<CosmicUnit>();
@@ -169,10 +215,10 @@ namespace Map
             {
                 Vector diff = gCUnit.Position - point;
 
-                if (diff < 100)
+                if (diff.Length < 100)
                     diff.Length = 100;
 
-                diff.Length = gCUnit.Gravity * (-100) / diff.Length;
+                diff.Length = gCUnit.Gravity * 100 / diff.Length;
 
                 gravity += diff;
             }

@@ -11,6 +11,7 @@ namespace Map
         public CosmicMeteorid(Unit unit) : base(unit)
         {
             Type = CosmicUnitKind.Meteroid;
+
         }
 
         public override void Update(CosmicUnit unit)

@@ -10,6 +10,7 @@ namespace Map
     {
         public CosmicUnknownObject(Unit unit) : base(unit)
         {
+            Type = CosmicUnitKind.Unknown;
         }
     }
 }
