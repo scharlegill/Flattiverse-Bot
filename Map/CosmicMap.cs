@@ -8,7 +8,6 @@ namespace Map
 {
     public class CosmicMap
     {
-        private Vector movement = null;
         private Vector shipmentMovement = new Vector();
 
         private Dictionary<string, CosmicUnit> namedUnits;
@@ -17,11 +16,28 @@ namespace Map
         private List<CosmicUnit> shotUnits = new List<CosmicUnit>();
         private List<CosmicUnit> stillUnits = new List<CosmicUnit>();
         private List<CosmicUnit> mobileUnits = new List<CosmicUnit>();
+        private List<CosmicUnit> gravitalUnits = new List<CosmicUnit>();
 
         private object sync = new object();
 
-        public CosmicMap(List<Unit> scannedUnitsp)
+        public CosmicMap(List<Unit> scannedUnits)
         {
+            namedUnits = new Dictionary<string, CosmicUnit>();
+
+            foreach (Unit scannedUnit in scannedUnits)
+            {
+                CosmicUnit cosmicUnit = CosmicUnit.FromFVUnit(scannedUnit);
+
+                if (cosmicUnit.Still)
+                    stillUnits.Add(cosmicUnit);
+                else
+                    mobileUnits.Add(cosmicUnit);
+
+                if (cosmicUnit.Gravity == 0)
+                    gravitalUnits.Add(cosmicUnit);
+
+                namedUnits.Add(scannedUnit.Name, cosmicUnit);
+            }
 
         }
 
@@ -40,7 +56,7 @@ namespace Map
             lock (sync)
                 lock (map.sync)
                 {
-                 
+             
                 }
 
             return true;
@@ -56,6 +72,25 @@ namespace Map
             List<CosmicUnit> units = new List<CosmicUnit>();
 
             return units;
+        }
+
+        public Vector CalculateGravity(Vector point)
+        {
+            Vector gravity = new Vector();
+
+            foreach (CosmicUnit gCUnit in gravitalUnits)
+            {
+                Vector diff = gCUnit.Position - point;
+
+                if (diff < 100)
+                    diff.Length = 100;
+
+                diff.Length = gCUnit.Gravity * (-100) / diff.Length;
+
+                gravity += diff;
+            }
+
+            return gravity;
         }
 
         public List<CosmicUnit> GetTargets(string name, Team team)

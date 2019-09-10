@@ -16,15 +16,24 @@ namespace Map
         public Team Team;
         public bool Still;
         public float Timeout;
-
-        internal Vector gravity;
+        public float Gravity;
 
         public CosmicUnit(Unit unit)
         {
+            Radius = unit.Radius;
+            Name = unit.Name;
+            Position = unit.Position;
+            Team = unit.Team;
+            MoveVector = unit.Movement;
+            Type = CosmicUnitKind.Unknown;
+            Gravity = unit.Gravity;
 
+            Still = (unit.Mobility == Mobility.Still);
+
+            Timeout = 10;
         }
 
-        public static CosmicUnit FromFVUnit(Flattiverse.Unit unit)
+        public static CosmicUnit FromFVUnit(Unit unit)
         {
             switch (unit.Kind)
             {
