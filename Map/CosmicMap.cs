@@ -8,9 +8,7 @@ namespace Map
 {
     public class CosmicMap
     {
-        public Vector ScanningShipMovement;
-
-        private Vector shipmentMovement = new Vector();
+        public Vector ScanningShipMovement = new Vector();
         private Vector movement = null;
 
         private Dictionary<string, CosmicUnit> namedUnits;
@@ -60,7 +58,10 @@ namespace Map
                 if (cosmicUnit.Gravity != 0)
                     gravitalUnits.Add(cosmicUnit);
 
-                namedUnits.Add(scannedUnit.Name, cosmicUnit);
+                if (cosmicUnit is CosmicExplosion)
+                    namedUnits.Add("e-" + scannedUnit.Name, cosmicUnit);
+                else
+                    namedUnits.Add(scannedUnit.Name, cosmicUnit);
 
                 if (cosmicUnit is CosmicShot || cosmicUnit is CosmicExplosion)
                     shotUnits.Add(cosmicUnit);
