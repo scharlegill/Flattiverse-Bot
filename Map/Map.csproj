@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,10 +52,12 @@
     <Compile Include="CosmicMoon.cs" />
     <Compile Include="CosmicPlanet.cs" />
     <Compile Include="CosmicShip.cs" />
+    <Compile Include="CosmicShot.cs" />
     <Compile Include="CosmicStarShip.cs" />
     <Compile Include="CosmicSun.cs" />
     <Compile Include="CosmicUnit.cs" />
     <Compile Include="CosmicUnitKind.cs" />
+    <Compile Include="CosmicUnknownObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
