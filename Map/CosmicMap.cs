@@ -119,6 +119,7 @@ namespace Map
         }
 
         public List<CosmicUnit> GravitalUnits { get => gravitalUnits; set => gravitalUnits = value; }
+        public Dictionary<string, CosmicUnit> NamedUnits { get => namedUnits; set => namedUnits = value; }
 
         public CosmicUnit ScanReference(Vector position)
         {
@@ -206,6 +207,21 @@ namespace Map
                         units.Add(unit);
 
             return units;
+        }
+
+        public bool Query(Vector startPoint, Vector direction)
+        {
+
+            Vector destination = startPoint + direction;
+
+
+            //foreach (CosmicUnit unit in namedUnits.Values)
+            //{
+            //    destination - unit.Position
+
+            //}
+
+            return true;
         }
 
         public Vector CalculateGravity(Vector point)
