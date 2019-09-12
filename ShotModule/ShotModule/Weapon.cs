@@ -29,10 +29,12 @@ namespace ShotModule
                 Console.WriteLine("Cannot shoot! No target ship found");
                 return;
             }
-
+           
             // 1. Target vector
             aimVector = target.Position - myShip.Position;
 
+            //Shooting is not from the ship center! 2 is distance between ship and weapon and 1 is a radius of bullet
+            aimVector.Length += (ship.Radius + 2 + ship.WeaponSize - 30); 
             float aimVectorTime = aimVector.Length / ship.WeaponShot.Speed.Limit;
 
             // 2. Adding target move vector 
@@ -44,10 +46,11 @@ namespace ShotModule
             // 4. Add myShip movement compensation
             resultantVector -= myShip.MoveVector;
 
-            Console.WriteLine("Target: " + target.Name);
+            Console.WriteLine("Target: " + target.Name + " Target: " + target.Position);
             Console.WriteLine("Target move vector: " + target.MoveVector);
             Console.WriteLine("Gravity: " + gravity.X.ToString() + " " + gravity.Y.ToString());
             Console.WriteLine("myShip move vector " + myShip.MoveVector);
+            Console.WriteLine("Weaponsize: " + ship.WeaponSize);
 
             int resultantVectorTime = (int)(resultantVector.Length / ship.WeaponShot.Speed.Limit);
 
