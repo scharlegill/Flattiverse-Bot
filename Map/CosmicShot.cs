@@ -10,6 +10,7 @@ namespace Map
     {
         public CosmicShot(Unit unit) : base(unit)
         {
+            Type = CosmicUnitKind.Shot;
         }
 
         public override void UpdateTimeout()
@@ -17,7 +18,7 @@ namespace Map
             Timeout = 100;
         }
 
-        public virtual void Update(CosmicUnit unit)
+        public override void Update(CosmicUnit unit)
         {
             Position = unit.Position;
             MoveVector = unit.MoveVector;

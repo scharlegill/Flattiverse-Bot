@@ -15,6 +15,8 @@ namespace Map
             Name = "e-" + unit.Name;
 
             Type = CosmicUnitKind.Explosion;
+
+            Still = false;
         }
 
         public override void UpdateTimeout()

@@ -14,7 +14,7 @@ namespace Map
         public CosmicOwnership(Ship scanningShip) : base(scanningShip)
         {
             Type = CosmicUnitKind.StarShip;
-           Team = scanningShip.Universe.UniverseGroup.Players["Scharle"].Team;
+            Team = scanningShip.Universe.Connector.Player.Team;
 
             Timeout = 30;
 
