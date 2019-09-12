@@ -43,12 +43,12 @@ namespace Map
                 CosmicUnit cosmicUnit = CosmicUnit.FromFVUnit(scannedUnit);
 
                 if (cosmicUnit.Still)
-                    cosmicUnit.MoveVector = new Vector();
-                //else
-                    //cosmicUnit.MoveVector += movement;
+                    ScanningShipMovement = -scannedUnit.Movement;
 
                 if (cosmicUnit.Still)
-                    ScanningShipMovement = -scannedUnit.Movement;
+                    cosmicUnit.MoveVector = new Vector();
+                else
+                    cosmicUnit.MoveVector += ScanningShipMovement;
 
                 if (cosmicUnit.Still)
                     stillUnits.Add(cosmicUnit);
