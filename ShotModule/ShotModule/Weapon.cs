@@ -10,7 +10,7 @@ namespace ShotModule
 {
     public class Weapon
     {
-        private List<CosmicShip> targetShips = new List<CosmicShip>();
+        private List<CosmicUnit> targetUnits = new List<CosmicUnit>();
 
         // instead of passing aimPoint, target ship can be passed
         public void Shoot(Ship ship, CosmicOwnership myShip, Vector aimPoint, Vector gravity)
@@ -18,8 +18,9 @@ namespace ShotModule
             Vector aimVector = new Vector();
             Vector resultantVector = new Vector();
 
-            CosmicShip target = null;
-            foreach (CosmicShip targetShip in targetShips)
+            CosmicUnit target = null;
+
+            foreach (CosmicUnit targetShip in targetUnits)
                 if ((targetShip.Position - aimPoint).Length <= targetShip.Radius)
                     target = targetShip;
 
@@ -66,7 +67,7 @@ namespace ShotModule
 
             float shotRadius = ship.WeaponShot.Speed.Limit * ship.WeaponShot.Time.Limit;
 
-            targetShips.Clear();
+            targetUnits.Clear();
 
             // Looking for enemies in range
             List<CosmicUnit> unitsInRange = map.Query(myShip.Position.X - shotRadius, myShip.Position.Y - shotRadius, myShip.Position.X + shotRadius, myShip.Position.Y + shotRadius);
@@ -74,10 +75,10 @@ namespace ShotModule
 
             foreach (CosmicUnit unit in unitsInRange)
             {
-                if (!(unit is CosmicShip || !(unit is CosmicMissionTarget)))// || unit.Team.Name == myShip.Team.Name) // check team - null ex
+                if (!(unit is CosmicShip) && !(unit is CosmicMissionTarget))// && unit.Team.Name == myShip.Team.Name) //uncomment while playing
                     continue;
 
-                targetShips.Add((CosmicShip)unit);
+                targetUnits.Add(unit);
 
                 if ((unit.Position - myShip.Position).Length <= shotRadius + unit.Radius)
                 {
