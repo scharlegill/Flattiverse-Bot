@@ -44,8 +44,8 @@ namespace Map
 
                 if (cosmicUnit.Still)
                     cosmicUnit.MoveVector = new Vector();
-                else
-                    cosmicUnit.MoveVector += movement;
+                //else
+                    //cosmicUnit.MoveVector += movement;
 
                 if (cosmicUnit.Still)
                     ScanningShipMovement = -scannedUnit.Movement;
@@ -203,25 +203,59 @@ namespace Map
 
             lock (sync)
                 foreach (CosmicUnit unit in namedUnits.Values)
-                    if (unit.Position.X + unit.Radius > left && unit.Position.Y + unit.Radius > top && unit.Position.X - unit.Radius < bottom && unit.Position.Y - unit.Radius < right)
+                    if (unit.Position.X + unit.Radius > left && unit.Position.Y + unit.Radius > top && unit.Position.X - unit.Radius < right && unit.Position.Y - unit.Radius < bottom)
                         units.Add(unit);
 
             return units;
         }
 
-        public bool Query(Vector startPoint, Vector direction)
+
+        public bool WayFree(Vector checkPoint, float minimumDistance)
         {
+            bool free = true;
+            Vector helpVector;
 
-            Vector destination = startPoint + direction;
+            foreach (CosmicUnit unit in namedUnits.Values)
+            {
+                if (unit is CosmicOwnership)
+                    continue;
 
+                helpVector = checkPoint - unit.Position;
+                helpVector.Length = unit.Radius;
 
-            //foreach (CosmicUnit unit in namedUnits.Values)
-            //{
-            //    destination - unit.Position
+                if (checkPoint - unit.Position - helpVector < minimumDistance)
+                    free = false;
+            }
 
-            //}
+            return free;
+        }
 
-            return true;
+        public List<Vector> QueryPossibleDestinations(Vector startPoint, float shipRadius)
+        {
+            List<Vector> possibleDestinations = new List<Vector>();
+            Vector destination;
+            Vector helpVector;
+            bool free;
+
+            for (int i = 0; i < 361; i += 45)
+            {
+                destination = startPoint + Vector.FromAngleLength(i, shipRadius * 2);
+                free = false;
+
+                foreach (CosmicUnit unit in namedUnits.Values)
+                {
+                    helpVector = destination - unit.Position;
+                    helpVector.Length = unit.Radius;
+
+                    if (destination - unit.Position - helpVector < shipRadius * 2)
+                        free = true;
+                }
+
+                if (free)
+                    possibleDestinations.Add(destination);
+            }
+
+            return possibleDestinations;
         }
 
         public Vector CalculateGravity(Vector point)
