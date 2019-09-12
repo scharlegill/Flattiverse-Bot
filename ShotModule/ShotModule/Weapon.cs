@@ -8,12 +8,12 @@ using Map;
 
 namespace ShotModule
 {
-    public static class Weapon
+    public class Weapon
     {
-        private static List<CosmicShip> targetShips = new List<CosmicShip>();
+        private List<CosmicShip> targetShips = new List<CosmicShip>();
 
         // instead of passing aimPoint, target ship can be passed
-        public static void Shoot(Ship ship, CosmicOwnership myShip, Vector aimPoint, Vector gravity)
+        public void Shoot(Ship ship, CosmicOwnership myShip, Vector aimPoint, Vector gravity)
         {
             Vector aimVector = new Vector();
             Vector resultantVector = new Vector();
@@ -38,10 +38,10 @@ namespace ShotModule
             resultantVector = aimVector + target.MoveVector * aimVectorTime;
 
             // 3. Add gravity compensation
-            //resultantVector -= gravity;
+            resultantVector -= gravity;
 
             // 4. Add myShip movement compensation
-            //resultantVector -= myShip.MoveVector;
+            resultantVector -= myShip.MoveVector;
 
             Console.WriteLine("Target: " + target.Name);
             Console.WriteLine("Target move vector: " + target.MoveVector);
@@ -59,7 +59,7 @@ namespace ShotModule
             ship.Shoot(resultantVector, resultantVectorTime);
         }
 
-        public static List<Vector> Evaluate(CosmicOwnership myShip, Ship ship, CosmicMap map)
+        public List<Vector> Evaluate(CosmicOwnership myShip, Ship ship, CosmicMap map)
         {
             if (ship.WeaponProductionStatus < 1)
                 return new List<Vector>();
@@ -74,7 +74,7 @@ namespace ShotModule
 
             foreach (CosmicUnit unit in unitsInRange)
             {
-                if (!(unit is CosmicShip) || unit.Timeout < 0)// || unit.Team.Name == myShip.Team.Name) // check team - null ex
+                if (!(unit is CosmicShip || !(unit is CosmicMissionTarget)))// || unit.Team.Name == myShip.Team.Name) // check team - null ex
                     continue;
 
                 targetShips.Add((CosmicShip)unit);
