@@ -48,7 +48,9 @@ namespace ShotModule
             Console.WriteLine("Gravity: " + gravity.X.ToString() + " " + gravity.Y.ToString());
             Console.WriteLine("myShip move vector " + myShip.MoveVector);
 
-            int resultantVectorTime = (int)(resultantVector.Length / ship.WeaponShot.Speed.Limit) + 1;
+            int resultantVectorTime = (int)(resultantVector.Length / ship.WeaponShot.Speed.Limit);
+
+            resultantVector.Length -= 0.5f;
 
             if (resultantVector.Length > ship.WeaponShot.Speed.Limit)
                 resultantVector.Length = ship.WeaponShot.Speed.Limit;
@@ -56,7 +58,7 @@ namespace ShotModule
             if (resultantVector.Length > ship.WeaponShot.Time.Limit)
                 resultantVector.Length = (int)ship.WeaponShot.Time.Limit;
 
-            //ship.Shoot(resultantVector, resultantVectorTime);
+            ship.Shoot(resultantVector, resultantVectorTime);
         }
 
         public static List<Vector> Evaluate(CosmicOwnership myShip, Ship ship, CosmicMap map)
