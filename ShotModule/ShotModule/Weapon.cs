@@ -53,8 +53,8 @@ namespace ShotModule
             if (resultantVector.Length > ship.WeaponShot.Speed.Limit)
                 resultantVector.Length = ship.WeaponShot.Speed.Limit;
 
-            if (aimVectorTime > ship.WeaponShot.Time.Limit)
-                aimVectorTime = (int)ship.WeaponShot.Time.Limit;
+            if (resultantVector.Length > ship.WeaponShot.Time.Limit)
+                resultantVector.Length = (int)ship.WeaponShot.Time.Limit;
 
             //ship.Shoot(resultantVector, resultantVectorTime);
         }
