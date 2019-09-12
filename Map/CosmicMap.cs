@@ -213,6 +213,9 @@ namespace Map
                             if (kvp.Value is CosmicShip)
                                 shipUnits.Add(kvp.Value);
 
+                            if (kvp.Value.Gravity != 0)
+                                gravitalUnits.Add(kvp.Value);
+
                         }
                 }
 
