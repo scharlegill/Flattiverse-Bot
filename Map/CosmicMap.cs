@@ -67,7 +67,10 @@ namespace Map
                     shotUnits.Add(cosmicUnit);
 
                 if (cosmicUnit is CosmicShip)
+                {
                     shipUnits.Add(cosmicUnit);
+                    mobileUnits.Add(cosmicUnit);
+                }
             }
 
             CosmicOwnership ownShip = new CosmicOwnership(scanningShip);
@@ -148,10 +151,29 @@ namespace Map
         {
             CosmicUnit dst = null;
             Vector diff = null;
+            List<CosmicUnit> removeList = new List<CosmicUnit>();
 
             lock (sync)
                 lock (map.sync)
                 {
+                    foreach (CosmicUnit unit in mobileUnits)
+                        if (!map.TryGetValue(unit.Name, out dst))
+                        {
+                            if (unit.Timeout <= 0)
+                                removeList.Add(unit);
+                            else
+                                unit.Timeout--;
+                        }
+
+                    foreach (CosmicUnit unit in removeList)
+                    {
+                        mobileUnits.Remove(unit);
+                        namedUnits.Remove(unit.Name);
+
+                        if (unit is CosmicShip)
+                            shipUnits.Remove(unit);
+                    }
+
                     ScanningShipMovement = map.ScanningShipMovement;
 
                     foreach (CosmicUnit unit in map.stillUnits)
