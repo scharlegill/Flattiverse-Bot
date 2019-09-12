@@ -51,7 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Flattiverse-Bot.git\trunk\Map\Map.csproj">
+    <ProjectReference Include="..\..\Map\Map.csproj">
       <Project>{bae0a701-7833-48f3-a1ac-720f6b35d843}</Project>
       <Name>Map</Name>
     </ProjectReference>
