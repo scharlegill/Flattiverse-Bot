@@ -36,5 +36,11 @@ namespace Map
 
             DominationTicks = ((MissionTarget)unit).DominationTicks;
         }
+
+        public override void Update(CosmicUnit unit)
+        {
+            DominationTicks = ((CosmicMissionTarget)unit).DominationTicks;
+            Color = ((CosmicMissionTarget)unit).Team.Color;
+        }
     }
 }
