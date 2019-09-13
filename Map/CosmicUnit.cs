@@ -84,6 +84,7 @@ namespace Map
             MoveVector = unit.MoveVector;
 
             Radius = unit.Radius;
+            Team = unit.Team;
         }
     }
 }

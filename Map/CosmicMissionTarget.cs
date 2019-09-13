@@ -29,7 +29,7 @@ namespace Map
                 Direction = hint;
 
             Color = ((MissionTarget)unit).Team.Color;
-
+            
             Number = ((MissionTarget)unit).SequenceNumber;
 
             DominationRadius = ((MissionTarget)unit).DominationRadius;
