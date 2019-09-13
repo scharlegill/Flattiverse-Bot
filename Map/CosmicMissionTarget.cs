@@ -28,7 +28,7 @@ namespace Map
             foreach (Vector hint in ((MissionTarget)unit).Hints)
                 Direction = hint;
 
-            Color = ((MissionTarget)unit).Team.Color;
+            Color = (((MissionTarget)unit).Team == null) ? Color.Gray : ((MissionTarget)unit).Team.Color;
             
             Number = ((MissionTarget)unit).SequenceNumber;
 

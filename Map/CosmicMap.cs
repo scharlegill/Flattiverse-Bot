@@ -152,6 +152,7 @@ namespace Map
             CosmicUnit dst = null;
             Vector diff = null;
             List<CosmicUnit> removeList = new List<CosmicUnit>();
+            List<CosmicUnit> addList = new List<CosmicUnit>();
 
             lock (sync)
                 lock (map.sync)
@@ -165,6 +166,16 @@ namespace Map
                                 unit.Timeout--;
                         }
 
+                    foreach (CosmicUnit unit in mobileUnits)
+                        if (map.TryGetValue(unit.Name, out dst))
+                        {
+                            if (dst is CosmicOwnership && unit.Type != CosmicUnitKind.StarShip)
+                            {
+                                removeList.Add(unit);
+                                addList.Add(dst);
+                            }
+                        }
+
                     foreach (CosmicUnit unit in removeList)
                     {
                         mobileUnits.Remove(unit);
@@ -172,6 +183,15 @@ namespace Map
 
                         if (unit is CosmicShip)
                             shipUnits.Remove(unit);
+                    }
+
+                    foreach (CosmicUnit unit in addList)
+                    {
+                        mobileUnits.Add(unit);
+                        namedUnits.Add(unit.Name, unit);
+
+                        if (unit is CosmicShip)
+                            shipUnits.Add(unit);
                     }
 
                     ScanningShipMovement = map.ScanningShipMovement;
@@ -215,7 +235,6 @@ namespace Map
 
                             if (kvp.Value.Gravity != 0)
                                 gravitalUnits.Add(kvp.Value);
-
                         }
                 }
 
