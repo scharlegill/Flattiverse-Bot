@@ -40,6 +40,7 @@ namespace Map
             Position = new Vector(0, 0);
             Type = CosmicUnitKind.Ship;
             MoveVector = new Vector();
+            Gravity = ownerShip.Gravity;
             Still = false;
         }
 
