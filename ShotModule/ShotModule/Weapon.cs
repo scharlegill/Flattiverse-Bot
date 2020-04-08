@@ -63,6 +63,36 @@ namespace ShotModule
             ship.Shoot(resultantVector, resultantVectorTime);
         }
 
+        public List<Vector> Evaluate(CosmicShip myShip, Ship ship, CosmicMap map)
+        {
+            if (ship.WeaponProductionStatus < 1)
+                return new List<Vector>();
+
+            float shotRadius = ship.WeaponShot.Speed.Limit * ship.WeaponShot.Time.Limit;
+
+            targetUnits.Clear();
+
+            // Looking for enemies in range
+            List<CosmicUnit> unitsInRange = map.Query(myShip.Position.X - shotRadius, myShip.Position.Y - shotRadius, myShip.Position.X + shotRadius, myShip.Position.Y + shotRadius);
+            List<Vector> shotOptions = new List<Vector>();
+
+            foreach (CosmicUnit unit in unitsInRange)
+            {
+                if (!(unit is CosmicShip) && !(unit is CosmicMissionTarget && unit.Team.Name == myShip.Team.Name)); //uncomment while playing
+                    continue;
+
+                targetUnits.Add(unit);
+
+                if ((unit.Position - myShip.Position).Length <= shotRadius + unit.Radius)
+                {
+                    shotOptions.Add(new Vector(unit.Position));
+                    Console.WriteLine("in range: " + unit.Name + " with move vector: " + unit.MoveVector);
+                }
+            }
+
+            return shotOptions;
+        }
+
         public List<Vector> Evaluate(CosmicOwnership myShip, Ship ship, CosmicMap map)
         {
             if (ship.WeaponProductionStatus < 1)
@@ -78,7 +108,7 @@ namespace ShotModule
 
             foreach (CosmicUnit unit in unitsInRange)
             {
-                if (!(unit is CosmicShip) && !(unit is CosmicMissionTarget))// && unit.Team.Name == myShip.Team.Name) //uncomment while playing
+                if (!(unit is CosmicShip) && !(unit is CosmicMissionTarget && unit.Team.Name == myShip.Team.Name))  //uncomment while playing
                     continue;
 
                 targetUnits.Add(unit);
